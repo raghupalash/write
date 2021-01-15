@@ -1,0 +1,29 @@
+body {
+    font-family: 'Poppins', Arial;
+}
+#section-form {
+	margin-bottom: 300px;
+}
+
+#section-form  textarea {
+	height: 200px;
+}
+
+/* navbar styles */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 30px;
+    padding-right: 10px;
+    border-right: 9px solid black;
+}
+
+.channel-name {
+    font-weight: 400;
+    font-size: 25px;
+    color: black;
+}
+
+.channel-name:hover {
+    text-decoration: none;
+    color: black;
+}

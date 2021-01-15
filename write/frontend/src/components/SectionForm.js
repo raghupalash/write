@@ -1,0 +1,101 @@
+import React, {Component} from 'react';
+
+
+class SectionForm extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			writting: false,
+			draftHeading: '',
+			headingSizes: [2, 3, 4, 5, 6],
+			headingChosen: `h${2}`,
+			draftText: '',
+		}
+		
+	}
+
+	render() {
+		const writting = this.state.writting
+		return (
+			<div>
+				{writting
+					?
+					<div>
+						<div>
+							<p className={this.state.headingChosen}>{this.state.draftHeading}</p>
+							<p>{this.state.draftText}</p>
+						</div>
+						<form id="section-form" className="jumbotron">
+							<div className="form-group">
+								<label htmlFor="section-heading">Heading</label>
+								<input id="section-heading" onChange={this.updateResponse} className="form-control" placeholder="Heading"></input>
+							</div>
+							<div className="form-group">
+								<label htmlFor="heading-size">Heading size</label>
+								<select id="heading-size" className="form-control" onChange={this.updateResponse}>
+									{this.state.headingSizes.map(item => (
+										<option key={item}>{item - 1}</option>
+									))}
+								</select>
+							</div>
+							<div className="form-group">
+								<label htmlFor="section-text">Text</label>
+								<textarea id="section-text" onChange={this.updateResponse} className="form-control" placeholder="Text"></textarea>
+							</div>
+							<button onClick={this.newSection} id="section-save" className="btn btn-primary">Save</button>
+						</form>
+					</div>
+					
+					: <button id="add-section" onClick={this.newSection} className="btn btn-primary">Add Section</button>
+				}
+			</div>
+		)
+	}
+
+	newSection = event => {
+		if (event.target.id === 'section-save') {
+			// Sending data to App Component
+			let data = {
+				heading: this.state.draftHeading,
+				paragraph: this.state.draftText,
+				headingChosen: this.state.headingChosen,
+			}
+            this.props.dataToApp(data);
+            
+			this.setState({
+				writting: false,
+				headingChosen: `h${2}`,
+			})
+
+			// Changing state of this component
+			this.setState({
+				draftHeading: '',
+				draftText: '',
+			})
+		}
+		else {
+			this.setState({
+				writting: true,
+			})
+		}
+	}
+
+	updateResponse = event => {
+		if (event.target.id === "section-heading") {
+			this.setState({
+				draftHeading: event.target.value,
+			})
+		} else if (event.target.id === "heading-size") {
+			this.setState({
+				headingChosen: `h${parseInt(event.target.value) + 1}`,
+			})
+		} else {
+			this.setState({
+				draftText: event.target.value,
+			})
+		}
+	}
+}
+
+export default SectionForm;
