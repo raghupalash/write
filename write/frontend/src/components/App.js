@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
 import SectionForm from './SectionForm';
-import Navbar from './Navbar';
 
 
 class App extends Component {
@@ -10,7 +9,6 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			text: '',
 			sections: [],
 		}
 	}
