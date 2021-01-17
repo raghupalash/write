@@ -30,23 +30,36 @@ class SectionForm extends Component {
 								<label htmlFor="section-heading">Heading</label>
 								<input id="section-heading" onChange={this.updateResponse} className="form-control" placeholder="Heading"></input>
 							</div>
-							<div className="form-group">
-								<label htmlFor="heading-size">Heading size</label>
-								<select id="heading-size" className="form-control" onChange={this.updateResponse}>
-									{this.state.headingSizes.map(item => (
-										<option key={item}>{item - 1}</option>
-									))}
-								</select>
-							</div>
-							<div className="form-group">
-								<label htmlFor="section-text">Text</label>
-								<textarea id="section-text" onChange={this.updateResponse} className="form-control" placeholder="Text"></textarea>
-							</div>
+							{this.props.wantText && 
+								<div>
+									<div className="form-group">
+										<label htmlFor="heading-size">Heading size</label>
+										<select id="heading-size" className="form-control" onChange={this.updateResponse}>
+											{this.state.headingSizes.map(item => (
+												<option key={item}>{item - 1}</option>
+											))}
+										</select>
+									</div>
+									<div className="form-group">
+										<label htmlFor="section-text">Text</label>
+										<textarea id="section-text" onChange={this.updateResponse} className="form-control" placeholder="Text"></textarea>
+									</div>
+								</div>
+							}
 							<button onClick={this.newSection} id="section-save" className="btn btn-primary">Save</button>
 						</form>
 					</div>
 					
-					: <button id="add-section" onClick={this.newSection} className="btn btn-primary">Add Section</button>
+					: 
+					<div>
+						{this.props.wantText 
+							?
+							<button id="add-section" onClick={this.newSection} className="btn btn-primary">+Section</button>
+
+							:
+							<button id="add-heading" onClick={this.newSection} className="btn btn-primary">+Heading</button>
+						}
+					</div>
 				}
 			</div>
 		)
@@ -82,8 +95,14 @@ class SectionForm extends Component {
 
 	updateResponse = event => {
 		if (event.target.id === "section-heading") {
+			// For size of the main heading
+			let headingSize = this.state.headingChosen;
+			if(!this.props.wantText) {
+				headingSize = 'h1';
+			}
 			this.setState({
 				draftHeading: event.target.value,
+				headingChosen: headingSize, // Don't seem very great design
 			})
 		} else if (event.target.id === "heading-size") {
 			this.setState({
