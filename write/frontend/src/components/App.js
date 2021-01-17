@@ -9,26 +9,37 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			sections: [],
+			sections: [], 
+			heading: '',
 		}
 	}
 
 	render() {
+		// If heading not present then renders '+heading' btn otherwise renders '+section'
+		let isheading = false;
+		if(this.state.heading !== '') {
+			isheading = true;
+		}
 		return (
 			<div>
-				<div className="container">
-					<h1>Blog</h1>
-					<div>
-						{this.state.sections.map(item => {
-							return(
-							<div key={this.state.sections.indexOf(item)}>
-								<p className={item.headingChosen}>{item.heading}</p>
-								<p>{item.paragraph}</p>
-							</div>)
-						})}
-					</div>
-					<SectionForm dataToApp={this.dataSectionForm}/>
-				</div>
+				{isheading
+					?
+						<div className="container">
+							<h1>{this.state.heading}</h1>
+							<div>
+								{this.state.sections.map(item => {
+									return(
+									<div key={this.state.sections.indexOf(item)}>
+										<p className={item.headingChosen}>{item.heading}</p>
+										<p>{item.paragraph}</p>
+									</div>)
+								})}
+							</div>
+							<SectionForm dataToApp={this.dataSectionForm} forHeading={false}/>
+						</div>
+					:   
+						<div className="container"><SectionForm dataToApp={this.dataSectionForm} forHeading={true}/></div>
+				}
 			</div>
 		);
 	}

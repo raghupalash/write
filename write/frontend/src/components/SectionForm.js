@@ -16,10 +16,9 @@ class SectionForm extends Component {
 	}
 
 	render() {
-		const writting = this.state.writting
 		return (
 			<div>
-				{writting
+				{this.state.writting
 					?
 					<div>
 						<div>
