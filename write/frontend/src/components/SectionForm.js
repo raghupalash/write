@@ -54,10 +54,10 @@ class SectionForm extends Component {
 					<div>
 						{this.props.wantText 
 							?
-							<button id="add-section" onClick={this.newSection} className="btn btn-primary">+Section</button>
+							<button id="add-section" onClick={this.newSection} className="btn btn-green">+Section</button>
 
 							:
-							<button id="add-heading" onClick={this.newSection} className="btn btn-primary">+Heading</button>
+							<button id="add-heading" onClick={this.newSection} className="btn btn-green">+Heading</button>
 						}
 					</div>
 				}

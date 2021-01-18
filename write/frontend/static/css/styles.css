@@ -27,3 +27,7 @@ body {
     text-decoration: none;
     color: black;
 }
+
+.btn-green {
+    background-color: #199F38;
+}
