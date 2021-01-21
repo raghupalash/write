@@ -47,6 +47,7 @@ class SectionForm extends Component {
 								</div>
 							}
 							<button onClick={this.newSection} id="section-save" className="btn btn-primary">Save</button>
+							<button onClick={this.cancelSection} id="section-cancel" className="btn btn-default">Cancel</button>
 						</form>
 					</div>
 					
@@ -91,6 +92,17 @@ class SectionForm extends Component {
 				writting: true,
 			})
 		}
+	}
+
+	// Event listener for cancel button
+	cancelSection = () => {
+		// Hide the form and remove the content that was displayed on the form
+		this.setState({
+			draftHeading: '',
+			draftText: '',
+			headingChosen: `h${2}`,
+			writting: false,
+		})
 	}
 
 	updateResponse = event => {
