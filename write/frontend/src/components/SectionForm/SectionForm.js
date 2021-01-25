@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 
+import NewSection from './NewSection';
+import UpdateResponse from './UpdateResponse';
+import CancelSection from './CancelSection';
+import CancelWarning from './CancelWarning'
+
 
 class SectionForm extends Component {
 	constructor(props) {
@@ -11,6 +16,7 @@ class SectionForm extends Component {
 			headingSizes: [2, 3, 4, 5, 6],
 			headingChosen: `h${2}`,
 			draftText: '',
+			cancelWarning: false,
 		}
 		
 	}
@@ -18,6 +24,7 @@ class SectionForm extends Component {
 	render() {
 		return (
 			<div>
+				<CancelWarning show={this.state.cancelWarning} parent={this}/>
 				{this.state.writting
 					?
 					<div>
@@ -66,66 +73,14 @@ class SectionForm extends Component {
 		)
 	}
 
-	newSection = event => {
-		if (event.target.id === 'section-save') {
-			// Sending data to App Component
-			let data = {
-				heading: this.state.draftHeading,
-				paragraph: this.state.draftText,
-				headingChosen: this.state.headingChosen,
-			}
-            this.props.dataToApp(data);
-            
-			this.setState({
-				writting: false,
-				headingChosen: `h${2}`,
-			})
-
-			// Changing state of this component
-			this.setState({
-				draftHeading: '',
-				draftText: '',
-			})
-		}
-		else {
-			this.setState({
-				writting: true,
-			})
-		}
-	}
+	// Event listener for new section
+	newSection = e => NewSection(e, this);
 
 	// Event listener for cancel button
-	cancelSection = () => {
-		// Hide the form and remove the content that was displayed on the form
-		this.setState({
-			draftHeading: '',
-			draftText: '',
-			headingChosen: `h${2}`,
-			writting: false,
-		})
-	}
+	cancelSection = () => CancelSection(e, this)
 
-	updateResponse = event => {
-		if (event.target.id === "section-heading") {
-			// For size of the main heading
-			let headingSize = this.state.headingChosen;
-			if(!this.props.wantText) {
-				headingSize = 'h1';
-			}
-			this.setState({
-				draftHeading: event.target.value,
-				headingChosen: headingSize, // Don't seem very great design
-			})
-		} else if (event.target.id === "heading-size") {
-			this.setState({
-				headingChosen: `h${parseInt(event.target.value) + 1}`,
-			})
-		} else {
-			this.setState({
-				draftText: event.target.value,
-			})
-		}
-	}
+	// Event listener for updating response
+	updateResponse = e => UpdateResponse(e, this);
 }
 
 export default SectionForm;
