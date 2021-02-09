@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 
 
+import NewSection from './NewSection';
+import UpdateResponse from './UpdateResponse';
+import Warning from './Warning'
+
+
+
 class SectionForm extends Component {
 	constructor(props) {
 		super(props);
@@ -10,7 +16,8 @@ class SectionForm extends Component {
 			draftHeading: '',
 			headingSizes: [2, 3, 4, 5, 6],
 			headingChosen: `h${2}`,
-			draftText: '',
+			draftText:  '',
+			warn: false,
 		}
 		
 	}
@@ -25,6 +32,8 @@ class SectionForm extends Component {
 							<p className={this.state.headingChosen}>{this.state.draftHeading}</p>
 							<p>{this.state.draftText}</p>
 						</div>
+
+						<Warning warn={this.state.warn} dataToForm={this.dataFromWarning}/>
 						<form id="section-form" className="jumbotron">
 							<div className="form-group">
 								<label htmlFor="section-heading">Heading</label>
@@ -47,18 +56,18 @@ class SectionForm extends Component {
 								</div>
 							}
 							<button onClick={this.newSection} id="section-save" className="btn btn-primary">Save</button>
-							<button onClick={this.cancelSection} id="section-cancel" className="btn btn-default">Cancel</button>
+							<button type="button" onClick={this.cancelSection} id="section-cancel" className="btn btn-default" >Cancel</button>
 						</form>
 					</div>
 					
 					: 
 					<div>
-						{this.props.wantText 
-							?
-							<button id="add-section" onClick={this.newSection} className="btn btn-green">+Section</button>
-
-							:
-							<button id="add-heading" onClick={this.newSection} className="btn btn-green">+Heading</button>
+						{	
+							this.props.wantText 
+								?
+								<button id="add-section" onClick={this.newSection} className="btn btn-green">+Section</button>
+								:
+								<button id="add-heading" onClick={this.newSection} className="btn btn-green">+Heading</button>
 						}
 					</div>
 				}
@@ -66,66 +75,46 @@ class SectionForm extends Component {
 		)
 	}
 
-	newSection = event => {
-		if (event.target.id === 'section-save') {
-			// Sending data to App Component
-			let data = {
-				heading: this.state.draftHeading,
-				paragraph: this.state.draftText,
-				headingChosen: this.state.headingChosen,
-			}
-            this.props.dataToApp(data);
-            
-			this.setState({
-				writting: false,
-				headingChosen: `h${2}`,
-			})
-
-			// Changing state of this component
-			this.setState({
-				draftHeading: '',
-				draftText: '',
-			})
-		}
-		else {
-			this.setState({
-				writting: true,
-			})
-		}
-	}
+	// Event listener for new section
+	newSection = e => NewSection(e, this);
 
 	// Event listener for cancel button
 	cancelSection = () => {
-		// Hide the form and remove the content that was displayed on the form
-		this.setState({
-			draftHeading: '',
-			draftText: '',
-			headingChosen: `h${2}`,
-			writting: false,
-		})
-	}
-
-	updateResponse = event => {
-		if (event.target.id === "section-heading") {
-			// For size of the main heading
-			let headingSize = this.state.headingChosen;
-			if(!this.props.wantText) {
-				headingSize = 'h1';
-			}
+		// If the form is completly empty then skip the warning part
+		if(this.state.draftHeading === '' && this.state.draftText === '') {
 			this.setState({
-				draftHeading: event.target.value,
-				headingChosen: headingSize, // Don't seem very great design
-			})
-		} else if (event.target.id === "heading-size") {
-			this.setState({
-				headingChosen: `h${parseInt(event.target.value) + 1}`,
+				draftHeading: '',
+                draftText: '',
+				headingChosen: `h${2}`,
+				writting: false,
+				warn: false,
 			})
 		} else {
 			this.setState({
-				draftText: event.target.value,
+				warn: true,
+			})
+		}
+	};
+
+	// Data from warning component
+	dataFromWarning = data => {
+		if (data.path === 'forward') {
+			this.setState({
+				draftHeading: '',
+                draftText: '',
+				headingChosen: `h${2}`,
+				writting: false,
+				warn: false,
+			})
+		} else {
+			this.setState({
+				warn: false,
 			})
 		}
 	}
+
+	// Event listener for updating response
+	updateResponse = e => UpdateResponse(e, this);
 }
 
 export default SectionForm;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-import SectionForm from './SectionForm';
+import SectionForm from './SectionForm/SectionForm';
 
 
 class App extends Component {
