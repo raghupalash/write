@@ -2,36 +2,48 @@ body {
     font-family: 'Poppins', Arial;
   }
   
-  #section-form {
-    margin-bottom: 300px;
-  }
+#section-form {
+  margin-bottom: 300px;
+}
+
+#section-form  textarea {
+  height: 200px;
+}
+
+/* navbar styles */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 20px;
+    padding-right: 10px;
+    border-right: 9px solid black;
+}
+
+.channel-name {
+    font-weight: 400;
+    font-size: 18px;
+    color: black;
+}
+
+.channel-name:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.btn-green {
+    background-color: #199F38;
+}
   
-  #section-form  textarea {
-    height: 200px;
-  }
-  
-  /* navbar styles */
-  .navbar-brand {
-      font-weight: 600;
-      font-size: 20px;
-      padding-right: 10px;
-      border-right: 9px solid black;
-  }
-  
-  .channel-name {
-      font-weight: 400;
-      font-size: 18px;
-      color: black;
-  }
-  
-  .channel-name:hover {
-      text-decoration: none;
-      color: black;
-  }
-  
-  .btn-green {
-      background-color: #199F38;
-  }
-  
+#login {
+  height: 100%;
+}
+#login .row div:nth-of-type(1) {
+  height: 100vh;
+
+  background: #642B73;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #C6426E, #642B73);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #C6426E, #642B73); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+
   
   
