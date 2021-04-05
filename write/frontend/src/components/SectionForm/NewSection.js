@@ -9,7 +9,9 @@ export default function NewSection(e, parent) {
             writting: false,
         }
         
+        // Sending data to the server to save draft section
         
+
         parent.setState({
             writting: false,
             headingChosen: `h${2}`,
