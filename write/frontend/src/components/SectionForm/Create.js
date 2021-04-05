@@ -8,6 +8,7 @@ class Create extends Component {
 		super(props);
 
 		this.state = {
+			blogID: null,
 			sections: [], 
 			heading: '',
 		}

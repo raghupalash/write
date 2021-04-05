@@ -114,7 +114,27 @@ class SectionForm extends Component {
 	}
 
 	// Event listener for updating response
-	updateResponse = e => UpdateResponse(e, this);
+	updateResponse = e => {
+		if (e.target.id === "section-heading") {
+			// For size of the main heading
+			let headingSize = this.state.headingChosen;
+			if(!this.props.wantText) {
+				headingSize = 'h1';
+			}
+			this.setState({
+				draftHeading: e.target.value,
+				headingChosen: headingSize, // Doesn't seem very great design
+			})
+		} else if (e.target.id === "heading-size") {
+			this.setState({
+				headingChosen: `h${parseInt(e.target.value) + 1}`,
+			})
+		} else {
+			this.setState({
+				draftText: e.target.value,
+			})
+		}
+	}
 }
 
 export default SectionForm;

@@ -10,7 +10,9 @@ export default function NewSection(e, parent) {
         }
         
         // Sending data to the server to save draft section
-        
+        fetch('http://127.0.0.1:8000/')
+        .then(response => response.json())
+        .then(data => console.log(data))
 
         parent.setState({
             writting: false,
