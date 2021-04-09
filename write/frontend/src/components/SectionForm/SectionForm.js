@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-
-
 import NewSection from './NewSection';
-import UpdateResponse from './UpdateResponse';
 import Warning from './Warning'
-
-
 
 class SectionForm extends Component {
 	constructor(props) {
