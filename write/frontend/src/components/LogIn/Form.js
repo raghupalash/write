@@ -25,7 +25,7 @@ class LogIn extends Component {
                         <div className="p-2 bd-highlight">
                             <h2>Join Write</h2>
                             <form onSubmit ={this.submit}>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <input 
                                         className="form-control" 
                                         type="text" 
@@ -35,7 +35,7 @@ class LogIn extends Component {
                                         onChange={this.handleChange} 
                                     />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <input 
                                         className="form-control" 
                                         type="text" 
@@ -45,7 +45,7 @@ class LogIn extends Component {
                                         onChange={this.handleChange} 
                                     />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <input 
                                         className="form-control" 
                                         name="dob" 
@@ -54,7 +54,7 @@ class LogIn extends Component {
                                         onChange={this.handleChange} 
                                     />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                     <input 
                                         className="form-control" 
                                         name="password" 
@@ -64,7 +64,7 @@ class LogIn extends Component {
                                         onChange={this.handleChange} 
                                     />
                                 </div>
-                                <div class="form-group">
+                                <div className="form-group">
                                         <input 
                                             className="form-control" 
                                             name="confirmPassword" 
@@ -145,26 +145,27 @@ class LogIn extends Component {
         })
     }
 
-    getCookie = name => {
-        if(!document.cookie) {
-            return null;
+    getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-        const xsrfCookies = document.cookie.split(';')
-        .map(c => c.trim())
-        .filter(c => c.startsWith(name + '='));
-
-        if(xsrfCookies.length === 0) {
-            print('tokenLength0')
-            return null;
-        }
-        return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+        console.log(cookieValue)
+        return cookieValue;
     }
-
+    
     submit = e => {
-        e.preventDefault();
-        const csrfToken = this.getCookie('CSRF-TOKEN');
+        e.preventDefault()
         let data = this.state.wantTo === 'signup'? this.state.signUpData:this.state.loginData;
- 
+        const csrftoken = this.getCookie('csrftoken')
         console.log(data);
         console.log(JSON.stringify(data));
         fetch('http://127.0.0.1:8000/api/user', {
@@ -172,12 +173,15 @@ class LogIn extends Component {
             'headers': {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
+                'X-CSRFToken': csrftoken,
             },
             'body': JSON.stringify(data),
         })
         .then(response => response.json())
         .then(something => console.log(something));
+
+        
+
     }
 }
 

@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .serializers import UserSerializer, CreateUserSerializer, BlogSerializer, CommentSerialzer, SectionSerializer
 
+
 @api_view(["GET", "POST"])
 def user(request):
     if request.method == "POST":
@@ -19,7 +20,7 @@ def user(request):
                 contact = serializer.data.get('contact')
                 dob = serializer.data.get('dob')
                 
-                user = User(username=username, contact=contact, dob=dob, password=password)
+                user = User.objects.create_user(username=username, contact=contact, dob=dob, password=password)
                 user.save()
                 return Response({'detail': 'registered!'})
         print(serializer.errors)
