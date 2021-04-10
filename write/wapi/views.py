@@ -10,19 +10,21 @@ from .serializers import UserSerializer, CreateUserSerializer, BlogSerializer, C
 def user(request):
     if request.method == "POST":
         serializer = CreateUserSerializer(data=request.data)
+        wantTo = serializer.initial_data.get('wantTo')
         if serializer.is_valid():
-            wantTo = serializer.data.get('wantTo')
-            username = serializer.data.get('Username')
-            password = serializer.data.get('Password')
+            print(serializer.data)
+            username = serializer.data.get('username')
+            password = serializer.data.get('password')
             if wantTo == "signup":
-                email = serializer.data.get('Email')
+                contact = serializer.data.get('contact')
                 dob = serializer.data.get('dob')
                 
-                user = User(username=username, contact=email, dob=dob, password=password)
+                user = User(username=username, contact=contact, dob=dob, password=password)
                 user.save()
                 return Response({'detail': 'registered!'})
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
     querySet = User.objects.all()
     serializer = UserSerializer(querySet, many=True)
     return Response(serializer.data)

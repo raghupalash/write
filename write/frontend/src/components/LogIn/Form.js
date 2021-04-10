@@ -74,7 +74,7 @@ class LogIn extends Component {
                                             onChange={this.handleChange} 
                                         />
                                 </div>
-                                <input type="submit" className="btn btn-success" />
+                                <button className="btn btn-success">Submit</button>
                             </form>
                             <p className="text-small">Already Have an account? 
                             <a href="#" onClick={this.loginSignup}> login</a> instead!</p>
@@ -107,9 +107,9 @@ class LogIn extends Component {
                                         />
                                     </div>
                                     <button className="btn btn-success">Submit</button>
-                                    <p className="text-small">Don't have an accoung 
-                                    <a href="#" onClick={this.loginSignup}> signup</a> instead!</p>
                                 </form>
+                                <p className="text-small">Don't have an accoung 
+                                <a href="#" onClick={this.loginSignup}> signup</a> instead!</p>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@ class LogIn extends Component {
         this.setState(state => {
             if (state.wantTo === 'signup') {
                 let data = state.signUpData;
-                data[name] = [value];
+                data[name] = value;
                 return {
                     signUpData: data,
                 }
@@ -164,7 +164,9 @@ class LogIn extends Component {
         e.preventDefault();
         const csrfToken = this.getCookie('CSRF-TOKEN');
         let data = this.state.wantTo === 'signup'? this.state.signUpData:this.state.loginData;
+ 
         console.log(data);
+        console.log(JSON.stringify(data));
         fetch('http://127.0.0.1:8000/api/user', {
             'method': 'POST',
             'headers': {
