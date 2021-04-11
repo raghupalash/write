@@ -1,14 +1,18 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import { useHistory } from 'react-router-dom'
 
 class LogIn extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            passwordMatch: true,
             wantTo: 'signup',
             signUpData: {
-                wantTo: 'signup'
+                wantTo: 'signup',
+                password: '',
+                confirmPassword: '',
             },
             loginData: {
                 wantTo: 'login'
@@ -73,8 +77,15 @@ class LogIn extends Component {
                                             value={this.state.value} 
                                             onChange={this.handleChange} 
                                         />
+                                        {!this.state.passwordMatch && 
+                                            <p className="text-small text-muted">Passwords must match!</p>
+                                        }
                                 </div>
-                                <button className="btn btn-success">Submit</button>
+                                <button 
+                                    disabled={!this.state.passwordMatch} 
+                                    className="btn btn-success">
+                                        Submit
+                                </button>
                             </form>
                             <p className="text-small">Already Have an account? 
                             <a href="#" onClick={this.loginSignup}> login</a> instead!</p>
@@ -132,7 +143,18 @@ class LogIn extends Component {
             if (state.wantTo === 'signup') {
                 let data = state.signUpData;
                 data[name] = value;
+
+                // Compare two fields here(password and confirmPassword)
+                // If the new value of one is different from the stored value of other
+                // then submit button must be disabled
+                let match = true;
+                if (name === 'password' && value !== state.signUpData.confirmPassword) {
+                    match = false
+                } else if (name === 'confirmPassword' && value !== state.signUpData.password) {
+                    match = false
+                }
                 return {
+                    passwordMatch: match,
                     signUpData: data,
                 }
             } else {
@@ -158,16 +180,13 @@ class LogIn extends Component {
                 }
             }
         }
-        console.log(cookieValue)
         return cookieValue;
     }
     
     submit = e => {
-        e.preventDefault()
+        e.preventDefault();
         let data = this.state.wantTo === 'signup'? this.state.signUpData:this.state.loginData;
         const csrftoken = this.getCookie('csrftoken')
-        console.log(data);
-        console.log(JSON.stringify(data));
         fetch('http://127.0.0.1:8000/api/user', {
             'method': 'POST',
             'headers': {
@@ -176,12 +195,8 @@ class LogIn extends Component {
                 'X-CSRFToken': csrftoken,
             },
             'body': JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(something => console.log(something));
-
-        
-
+        }) 
+        .then(() => this.props.history.push('/create'))
     }
 }
 
