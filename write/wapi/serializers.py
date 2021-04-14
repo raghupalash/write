@@ -12,17 +12,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("username", "contact", "dob", "password")
 
-class BlogSerializer(serializers.ModelSerializer):
+class CreateBlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ["__all__"]
+        fields = ["heading"]
 
-class SectionSerializer(serializers.ModelSerializer):
+class CreateSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
-        fields = ["__all__"]
-
-class CommentSerialzer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ["__all__"]
+        fields = [""]

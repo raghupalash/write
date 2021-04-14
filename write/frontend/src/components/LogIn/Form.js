@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import { useHistory } from 'react-router-dom'
+
 
 class LogIn extends Component {
     constructor(props) {
@@ -186,6 +186,7 @@ class LogIn extends Component {
     submit = e => {
         e.preventDefault();
         let data = this.state.wantTo === 'signup'? this.state.signUpData:this.state.loginData;
+        console.log(data)
         const csrftoken = this.getCookie('csrftoken')
         fetch('http://127.0.0.1:8000/api/user', {
             'method': 'POST',
@@ -196,7 +197,14 @@ class LogIn extends Component {
             },
             'body': JSON.stringify(data),
         }) 
-        .then(() => this.props.history.push('/create'))
+        .then(response => {
+            if (response.ok) {
+                this.props.history.push('/home')
+            } else {
+                console.log(response.json())
+            }
+        })
+        .catch(error => console.log(error))
     }
 }
 

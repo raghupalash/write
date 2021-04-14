@@ -1,3 +1,5 @@
+import getCookie from '../Cookie';
+
 export default function NewSection(e, parent) {
     let data;
     if (e.target.id === 'section-save') {
@@ -8,9 +10,27 @@ export default function NewSection(e, parent) {
             headingChosen: parent.state.headingChosen,
             writting: false,
         }
+
+        let payloadData, sendTo;
+        if (parent.props.wantText) {
+            payloadData = data
+            sendTo = 'section'
+        } else {
+            payloadData = {heading: parent.state.draftHeading}
+            sendTo = 'blog'
+        }
         
-        // Sending data to the server to save draft section
-        fetch('http://127.0.0.1:8000/')
+        // Sending data to the server to save draft section (or blog title)
+        const payload = {
+            'method': 'POST',
+            'headers': {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            'body': JSON.stringify(payloadData)
+        }
+        fetch(`http://127.0.0.1:8000/api/${sendTo}`, payload)
         .then(response => response.json())
         .then(data => console.log(data))
 

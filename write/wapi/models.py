@@ -11,9 +11,10 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['dob']
 
 class Blog(models.Model):
+    heading = models.CharField(max_length=64)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blogs")
-    likes = models.IntegerField()
-    liked_by = models.ManyToManyField(User, related_name="blogs_liked")
+    likes = models.IntegerField(null=True)
+    liked_by = models.ManyToManyField(User, related_name="blogs_liked", null=True)
     created = models.DateTimeField(auto_now_add=True)
     
 class Section(models.Model):

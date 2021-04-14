@@ -1,14 +1,12 @@
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
 from .models import User, Blog, Section, Comment
-from .serializers import UserSerializer, CreateUserSerializer, BlogSerializer, CommentSerialzer, SectionSerializer
+from .serializers import UserSerializer, CreateUserSerializer, CreateBlogSerializer
 
 
 @api_view(["GET", "POST"])
@@ -16,45 +14,45 @@ def user(request):
     if request.method == "POST":
         serializer = CreateUserSerializer(data=request.data)
         wantTo = serializer.initial_data.get('wantTo')
-        if serializer.is_valid():
-            username = serializer.data.get('username')
-            password = serializer.data.get('password')
-            if wantTo == "signup":
+        username = serializer.initial_data.get('username')
+        password = serializer.initial_data.get('password')
+        if wantTo == 'signup':
+            if serializer.is_valid():
                 contact = serializer.data.get('contact')
                 dob = serializer.data.get('dob')
                 user = User.objects.create_user(username=username, contact=contact, dob=dob, password=password)
                 user.save()
                 login(request, user)
-                return HttpResponseRedirect(redirect_to=reverse("create"))
+                return Response({"message": "registered!"}, status=status.HTTP_200_OK) 
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return Response({"message": "logged in"}, status=status.HTTP_200_OK)
             else:
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    return HttpResponseRedirect(redirect_to=reverse("create"))
-                else:
-                    return render(request, "auctions/login.html", {
-                        "message": "Invalid username and/or password."
-                    })
-        print(serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"Bad Request": 'Invalid username and/or password'}, status=status.HTTP_400_BAD_REQUEST)
 
     querySet = User.objects.all()
     serializer = UserSerializer(querySet, many=True)
     return Response(serializer.data)
 
-@api_view(["GET", "POST"])
-def section(request, blog):
-    """
-    Returns all sections, given a blogpost or posts a new section
-    """
-    if request.method == "GET":
-        sections = Section.objects.all().order_by('section_id')
-        serializer = SectionSerializer(sections, many=True)
-        return Response(serializer.data, safe=False)
-    
-    elif request.method == "POST":
-        serializer = SectionSerializer(request.data)
+@api_view(["GET"])
+def user_logged_in(request):
+    data = {
+        "isAuth": request.user.is_authenticated,
+    }
+    return JsonResponse(data, status=status.HTTP_200_OK)
+
+@api_view(["GET", "POST"]) 
+def blog(request):
+    if request.method == "POST":
+        serializer = CreateBlogSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            Response(serializer.data, status=status.HTTP_201_CREATED)
-        Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+            heading = serializer.data.get("heading")
+            if heading != "":
+                blog = Blog(heading=heading, creator=request.user)
+                blog.save()
+                return Response({"message": "Blog Created!"}, status=status.HTTP_200_OK)
+            return Response({"error": "empty string"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors)

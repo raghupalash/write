@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import section, user
+from . import views
 
 urlpatterns = [
-    path('user', user, name="user"),
-    path('section', section, name="section"),
+    path('user', views.user, name="user"),
+    path('user_authenticated', views.user_logged_in),
+    path('blog', views.blog),
 ]
