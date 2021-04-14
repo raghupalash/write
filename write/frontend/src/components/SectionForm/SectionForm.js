@@ -100,6 +100,7 @@ class SectionForm extends Component {
 				headingChosen: `h${2}`,
 				writting: false,
 				warn: false,
+				blog: null,
 			})
 		} else {
 			this.setState({

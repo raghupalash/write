@@ -199,7 +199,11 @@ class LogIn extends Component {
         }) 
         .then(response => {
             if (response.ok) {
-                this.props.history.push('/home')
+                this.props.history.push('');
+
+                // Log in the user on the frontend
+                this.props.updateLogIn(true);
+
             } else {
                 console.log(response.json())
             }

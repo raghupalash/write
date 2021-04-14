@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from .models import User, Blog, Section, Comment
-from .serializers import UserSerializer, CreateUserSerializer, CreateBlogSerializer
+from .serializers import CreateSectionSerializer, UserSerializer, CreateUserSerializer, CreateBlogSerializer
 
 
 @api_view(["GET", "POST"])
@@ -53,6 +53,29 @@ def blog(request):
             if heading != "":
                 blog = Blog(heading=heading, creator=request.user)
                 blog.save()
-                return Response({"message": "Blog Created!"}, status=status.HTTP_200_OK)
+                return Response({
+                    "blog_id": blog.pk,
+                    "message": "Blog Created!"
+                })
             return Response({"error": "empty string"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors)
+
+@api_view(["GET", "POST"])
+def section(request, blog_id):
+    if request.method == "POST":
+        blog = Blog.objects.get(pk=blog_id)
+        serializer = CreateSectionSerializer(data=request.data)
+        if serializer.is_valid():
+            # Counting all the section objects
+            section_objects = Section.objects.filter(belongs_to=blog)
+            section = Section(
+                section_id = len(section_objects),
+                heading = serializer.data.get("heading"),
+                heading_size = serializer.data.get("heading_size"),
+                paragraph = serializer.data.get("paragraph"),
+                belongs_to = blog
+            )
+            section.save()
+            return Response({"message": "saved!"}, status=status.HTTP_200_OK)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

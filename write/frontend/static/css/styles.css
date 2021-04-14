@@ -2,6 +2,10 @@ body {
   font-family: 'Poppins', Arial;
 }
 
+p {
+  font-size: 20px;
+}
+
 #section-form {
 margin-bottom: 300px;
 }
@@ -38,6 +42,8 @@ height: 100%;
 }
 
 #login {
+margin-top: -56px;
+position: relative;
 color: white;
 height: 100vh;
 background-color: #11eecc;

@@ -2,19 +2,20 @@ import getCookie from '../Cookie';
 
 export default function NewSection(e, parent) {
     let data;
+    let wantText = parent.props.wantText
     if (e.target.id === 'section-save') {
         // Sending data to App Component
         data = {
             heading: parent.state.draftHeading,
             paragraph: parent.state.draftText,
-            headingChosen: parent.state.headingChosen,
+            heading_size: parent.state.headingChosen,
             writting: false,
         }
 
         let payloadData, sendTo;
-        if (parent.props.wantText) {
+        if (wantText) {
             payloadData = data
-            sendTo = 'section'
+            sendTo = `section/${parent.state.blog}`
         } else {
             payloadData = {heading: parent.state.draftHeading}
             sendTo = 'blog'
@@ -32,8 +33,17 @@ export default function NewSection(e, parent) {
         }
         fetch(`http://127.0.0.1:8000/api/${sendTo}`, payload)
         .then(response => response.json())
-        .then(data => console.log(data))
-
+        .then(data => {
+            if (!wantText) {
+                parent.setState({
+                    blog: data.blog_id
+                });
+                console.log(parent.state.blog)
+            }
+            console.log(data.message);
+        })
+        .catch(error => console.log(error));
+        
         parent.setState({
             writting: false,
             headingChosen: `h${2}`,
@@ -54,5 +64,6 @@ export default function NewSection(e, parent) {
     } 
 
     // Send data
+    console.log(data)
     parent.props.dataToApp(data);
 }

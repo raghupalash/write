@@ -20,4 +20,4 @@ class CreateBlogSerializer(serializers.ModelSerializer):
 class CreateSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
-        fields = [""]
+        fields = ["heading", "heading_size", "paragraph"]

@@ -23,7 +23,7 @@ class Create extends Component {
 						{this.state.sections.map(item => {
 							return(
 							<div key={this.state.sections.indexOf(item)}>
-								<p className={item.headingChosen}>{item.heading}</p>
+								<p className={item.heading_size}>{item.heading}</p>
 								<p>{item.paragraph}</p>
 							</div>)
 						})}

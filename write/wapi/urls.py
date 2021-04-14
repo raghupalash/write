@@ -5,4 +5,5 @@ urlpatterns = [
     path('user', views.user, name="user"),
     path('user_authenticated', views.user_logged_in),
     path('blog', views.blog),
+    path('section/<int:blog_id>', views.section)
 ]

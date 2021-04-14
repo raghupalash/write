@@ -13,11 +13,31 @@ import LogIn from './LogIn/Form';
 import Navbar from './Navbar';
 import Home from './Home';
 
+function AuthenticatedRoute ({component: Component, loggedIn, ...rest}) {
+	return (
+		<Route 
+			{...rest}
+			render = {() => 
+				loggedIn ? (
+					<Component />
+				) : (
+					<Redirect 
+						to={{
+							pathname: '/login'
+						}}
+					/>
+				)
+			}
+		/>
+	)
+}
+	
+
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAuth: false,
+			loggedIn: false,
 		}
 	}
 
@@ -31,23 +51,22 @@ class App extends Component {
 		})
 	}
 
+	updateLogIn = loggedIn => {
+		// Update the state to log in user
+		this.setState({
+			loggedIn: loggedIn
+		})
+	}
+
 	render() {
 		return (
 			<Router>
-				<Switch>
-					<Route exact path='/login' component={LogIn} />
-				</Switch>
-				<Switch>
-					<Route exact path="/home" component={Home} />
-				</Switch>
-				<Switch>
-					<Route exact path='/create' render={() =>
-						<div>
-							<Navbar />
-							<Create />
-						</div>
-					} />
-				</Switch>
+					<Route path="/" component={Navbar} />
+					<Route exact path='/login' render={(props) => (
+						<LogIn {...props} updateLogIn={this.updateLogIn}/>
+					)} />
+					<Route exact path="/" loggedIn={this.state.loggedIn} component={Home} />
+					<AuthenticatedRoute exact path='/create' loggedIn={this.state.loggedIn} component={Create} />
 			</Router>
 		)
 	}
